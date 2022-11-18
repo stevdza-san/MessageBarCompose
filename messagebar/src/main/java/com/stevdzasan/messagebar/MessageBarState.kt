@@ -3,18 +3,22 @@ package com.stevdzasan.messagebar
 import androidx.compose.runtime.*
 
 class MessageBarState {
-    var success = mutableStateOf<String?>(null)
+    var success by mutableStateOf<String?>(null)
         private set
-    var error = mutableStateOf<Exception?>(null)
+    var error by mutableStateOf<Exception?>(null)
+        private set
+    internal var updated by mutableStateOf(false)
         private set
 
     fun addSuccess(message: String) {
-        error.value = null
-        success.value = message
+        error = null
+        success = message
+        updated = !updated
     }
 
     fun addError(exception: Exception) {
-        success.value = null
-        error.value = exception
+        success = null
+        error = exception
+        updated = !updated
     }
 }

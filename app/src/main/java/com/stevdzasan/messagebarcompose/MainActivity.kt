@@ -37,18 +37,18 @@ class MainActivity : ComponentActivity() {
                         }
                         Button(onClick = {
                             state.addError(
-                                ArrayIndexOutOfBoundsException("This is supposed to be a very long error message.")
+                                exception = Exception("This is supposed to be a very long error message.")
                             )
                         }) {
                             Text(text = "Error #2")
                         }
                         Button(onClick = {
-                            state.addSuccess("Successful.")
+                            state.addSuccess(message = "Successful.")
                         }) {
                             Text(text = "Success #1")
                         }
                         Button(onClick = {
-                            state.addSuccess("Successfully Updated.")
+                            state.addSuccess(message = "Successfully Updated.")
                         }) {
                             Text(text = "Success #2")
                         }

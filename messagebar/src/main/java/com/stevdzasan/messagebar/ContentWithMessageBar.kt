@@ -65,10 +65,10 @@ private fun MessageBarComponent(
     showToastOnCopy: Boolean = false
 ) {
     var showMessageBar by remember { mutableStateOf(false) }
-    val error by rememberUpdatedState(newValue = messageBarState.error.value?.message)
-    val message by rememberUpdatedState(newValue = messageBarState.success.value)
+    val error by rememberUpdatedState(newValue = messageBarState.error?.message)
+    val message by rememberUpdatedState(newValue = messageBarState.success)
 
-    DisposableEffect(key1 = error, key2 = message) {
+    DisposableEffect(key1 = messageBarState.updated) {
         showMessageBar = true
         val timer = Timer("Animation Timer", true)
         timer.schedule(visibilityDuration) {
@@ -81,8 +81,8 @@ private fun MessageBarComponent(
     }
 
     AnimatedVisibility(
-        visible = messageBarState.error.value != null && showMessageBar
-                || messageBarState.success.value != null && showMessageBar,
+        visible = messageBarState.error != null && showMessageBar
+                || messageBarState.success != null && showMessageBar,
         enter = expandVertically(
             animationSpec = tween(300),
             expandFrom = Alignment.Top
@@ -157,8 +157,8 @@ private fun MessageBar(
                 modifier = Modifier.weight(1f),
                 onClick = {
                     clipboardManager.setText(AnnotatedString(text = "$error"))
-                    if(showToastOnCopy) {
-                        Toast.makeText(context,"Copied!", Toast.LENGTH_SHORT).show()
+                    if (showToastOnCopy) {
+                        Toast.makeText(context, "Copied!", Toast.LENGTH_SHORT).show()
                     }
                 },
                 contentPadding = PaddingValues(vertical = 0.dp)
