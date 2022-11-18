@@ -61,7 +61,7 @@ publishing {
         release(MavenPublication) {
             groupId = 'com.github.stevdza-san'
             artifactId = 'MessageBarCompose'
-            version = '1.0.0'
+            version = '1.0.1'
 
             afterEvaluate {
                 from components.release
