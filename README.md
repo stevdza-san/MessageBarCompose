@@ -12,7 +12,7 @@ and it is built to supports Material 3 design system.
 </p><br>
 
 <p align="center">
-<img src="https://github.com/stevdza-san/MessageBarCompose/blob/master/MessageBar.gif?raw=true" width="268"/>
+<img src="https://github.com/stevdza-san/MessageBarCompose/blob/master/Previews/MessageBar.gif?raw=true" width="268"/>
 </p>
 
 ## Download
