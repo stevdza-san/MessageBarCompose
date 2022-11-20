@@ -1,4 +1,4 @@
-<h1 align="center">Message Bar - Jetpack Compose</h1></br>
+<h1 align="center">Message Bar Compose</h1></br>
 
 <p align="center">
   <a href="https://jitpack.io/#stevdza-san/MessageBarCompose/1.0.3"><img alt="License" src="https://badgen.net/badge/Jitpack/1.0.3/orange?icon=github"/></a>
