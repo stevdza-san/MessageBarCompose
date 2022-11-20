@@ -18,6 +18,8 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
@@ -40,15 +42,31 @@ fun ContentWithMessageBar(
     messageBarState: MessageBarState,
     visibilityDuration: Long = 3000L,
     showToastOnCopy: Boolean = false,
+    successIcon: ImageVector = Icons.Default.Check,
+    errorIcon: ImageVector = Icons.Default.Warning,
+    contentBackgroundColor: Color = MaterialTheme.colorScheme.surface,
+    successContainerColor: Color = MaterialTheme.colorScheme.primaryContainer,
+    successContentColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
+    errorContainerColor: Color = MaterialTheme.colorScheme.errorContainer,
+    errorContentColor: Color = MaterialTheme.colorScheme.onErrorContainer,
     verticalPadding: Dp = 12.dp,
     horizontalPadding: Dp = 12.dp,
     content: @Composable () -> Unit
 ) {
-    Box(modifier = modifier.fillMaxSize()) {
+    Box(modifier = modifier
+        .fillMaxSize()
+        .background(color = contentBackgroundColor)
+    ) {
         content()
         MessageBarComponent(
             messageBarState = messageBarState,
             visibilityDuration = visibilityDuration,
+            successIcon = successIcon,
+            errorIcon = errorIcon,
+            successContainerColor = successContainerColor,
+            successContentColor = successContentColor,
+            errorContainerColor = errorContainerColor,
+            errorContentColor = errorContentColor,
             verticalPadding = verticalPadding,
             horizontalPadding = horizontalPadding,
             showToastOnCopy = showToastOnCopy
@@ -60,6 +78,12 @@ fun ContentWithMessageBar(
 private fun MessageBarComponent(
     messageBarState: MessageBarState,
     visibilityDuration: Long,
+    successIcon: ImageVector = Icons.Default.Check,
+    errorIcon: ImageVector = Icons.Default.Warning,
+    successContainerColor: Color = MaterialTheme.colorScheme.primaryContainer,
+    successContentColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
+    errorContainerColor: Color = MaterialTheme.colorScheme.errorContainer,
+    errorContentColor: Color = MaterialTheme.colorScheme.onErrorContainer,
     verticalPadding: Dp,
     horizontalPadding: Dp,
     showToastOnCopy: Boolean = false
@@ -95,6 +119,12 @@ private fun MessageBarComponent(
         MessageBar(
             message = message,
             error = error,
+            successIcon = successIcon,
+            errorIcon = errorIcon,
+            successContainerColor = successContainerColor,
+            successContentColor = successContentColor,
+            errorContainerColor = errorContainerColor,
+            errorContentColor = errorContentColor,
             verticalPadding = verticalPadding,
             horizontalPadding = horizontalPadding,
             showToastOnCopy = showToastOnCopy
@@ -106,6 +136,12 @@ private fun MessageBarComponent(
 private fun MessageBar(
     message: String? = null,
     error: String? = null,
+    successIcon: ImageVector = Icons.Default.Check,
+    errorIcon: ImageVector = Icons.Default.Warning,
+    successContainerColor: Color = MaterialTheme.colorScheme.primaryContainer,
+    successContentColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
+    errorContainerColor: Color = MaterialTheme.colorScheme.errorContainer,
+    errorContentColor: Color = MaterialTheme.colorScheme.onErrorContainer,
     verticalPadding: Dp,
     horizontalPadding: Dp,
     showToastOnCopy: Boolean = false,
@@ -117,8 +153,8 @@ private fun MessageBar(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                if (error != null) MaterialTheme.colorScheme.errorContainer
-                else MaterialTheme.colorScheme.primaryContainer
+                if (error != null) errorContainerColor
+                else successContainerColor
             )
             .padding(vertical = if (error != null) 0.dp else verticalPadding)
             .padding(
@@ -135,18 +171,18 @@ private fun MessageBar(
         ) {
             Icon(
                 imageVector =
-                if (error != null) Icons.Default.Warning
-                else Icons.Default.Check,
+                if (error != null) errorIcon
+                else successIcon,
                 contentDescription = "Message Bar Icon",
-                tint = if (error != null) MaterialTheme.colorScheme.onErrorContainer
-                else MaterialTheme.colorScheme.onPrimaryContainer
+                tint = if (error != null) errorContentColor
+                else successContentColor
             )
             Spacer(modifier = Modifier.width(12.dp))
             Text(
                 text =
                 error ?: (message ?: "Unknown"),
-                color = if (error != null) MaterialTheme.colorScheme.onErrorContainer
-                else MaterialTheme.colorScheme.onPrimaryContainer,
+                color = if (error != null) errorContentColor
+                else successContentColor,
                 fontSize = MaterialTheme.typography.labelLarge.fontSize,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1
@@ -165,7 +201,7 @@ private fun MessageBar(
             ) {
                 Text(
                     text = "Copy",
-                    color = MaterialTheme.colorScheme.onErrorContainer,
+                    color = errorContentColor,
                     fontSize = MaterialTheme.typography.labelMedium.fontSize,
                     textAlign = TextAlign.End
                 )
