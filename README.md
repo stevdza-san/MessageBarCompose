@@ -93,6 +93,10 @@ ContentWithMessageBar(messageBarState = state) {
 }
 ```
 
+## Like what you see? :yellow_heart:
+⭐ Give a star to this repository. <br />
+☕ Buy me a coffee: https://ko-fi.com/stevdza_san
+
 # License
 ```xml
 Designed and developed by 2022 stevdza-san (Stefan Jovanović)
