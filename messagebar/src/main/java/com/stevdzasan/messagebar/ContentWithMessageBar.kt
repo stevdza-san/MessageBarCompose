@@ -1,11 +1,8 @@
 package com.stevdzasan.messagebar
 
 import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -22,12 +19,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.stevdzasan.messagebar.TestTags.COPY_BUTTON
+import com.stevdzasan.messagebar.TestTags.MESSAGE_BAR
+import com.stevdzasan.messagebar.TestTags.MESSAGE_BAR_TEXT
 import java.util.*
 import kotlin.concurrent.schedule
 
@@ -36,10 +37,16 @@ fun rememberMessageBarState(): MessageBarState {
     return remember { MessageBarState() }
 }
 
+enum class MessageBarPosition {
+    TOP,
+    BOTTOM
+}
+
 @Composable
 fun ContentWithMessageBar(
     modifier: Modifier = Modifier,
     messageBarState: MessageBarState,
+    position: MessageBarPosition = MessageBarPosition.TOP,
     visibilityDuration: Long = 3000L,
     showToastOnCopy: Boolean = false,
     successIcon: ImageVector = Icons.Default.Check,
@@ -49,17 +56,29 @@ fun ContentWithMessageBar(
     successContentColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
     errorContainerColor: Color = MaterialTheme.colorScheme.errorContainer,
     errorContentColor: Color = MaterialTheme.colorScheme.onErrorContainer,
+    enterAnimation: EnterTransition = expandVertically(
+        animationSpec = tween(durationMillis = 300),
+        expandFrom = if (position == MessageBarPosition.TOP)
+            Alignment.Top else Alignment.Bottom
+    ),
+    exitAnimation: ExitTransition = shrinkVertically(
+        animationSpec = tween(durationMillis = 300),
+        shrinkTowards = if (position == MessageBarPosition.TOP)
+            Alignment.Top else Alignment.Bottom
+    ),
     verticalPadding: Dp = 12.dp,
     horizontalPadding: Dp = 12.dp,
     content: @Composable () -> Unit
 ) {
-    Box(modifier = modifier
-        .fillMaxSize()
-        .background(color = contentBackgroundColor)
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(color = contentBackgroundColor)
     ) {
         content()
         MessageBarComponent(
             messageBarState = messageBarState,
+            position = position,
             visibilityDuration = visibilityDuration,
             successIcon = successIcon,
             errorIcon = errorIcon,
@@ -67,6 +86,8 @@ fun ContentWithMessageBar(
             successContentColor = successContentColor,
             errorContainerColor = errorContainerColor,
             errorContentColor = errorContentColor,
+            enterAnimation = enterAnimation,
+            exitAnimation = exitAnimation,
             verticalPadding = verticalPadding,
             horizontalPadding = horizontalPadding,
             showToastOnCopy = showToastOnCopy
@@ -75,18 +96,21 @@ fun ContentWithMessageBar(
 }
 
 @Composable
-private fun MessageBarComponent(
+internal fun MessageBarComponent(
     messageBarState: MessageBarState,
+    position: MessageBarPosition,
     visibilityDuration: Long,
-    successIcon: ImageVector = Icons.Default.Check,
-    errorIcon: ImageVector = Icons.Default.Warning,
-    successContainerColor: Color = MaterialTheme.colorScheme.primaryContainer,
-    successContentColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
-    errorContainerColor: Color = MaterialTheme.colorScheme.errorContainer,
-    errorContentColor: Color = MaterialTheme.colorScheme.onErrorContainer,
+    successIcon: ImageVector,
+    errorIcon: ImageVector,
+    successContainerColor: Color,
+    successContentColor: Color,
+    errorContainerColor: Color,
+    errorContentColor: Color,
+    enterAnimation: EnterTransition,
+    exitAnimation: ExitTransition,
     verticalPadding: Dp,
     horizontalPadding: Dp,
-    showToastOnCopy: Boolean = false
+    showToastOnCopy: Boolean
 ) {
     var showMessageBar by remember { mutableStateOf(false) }
     val error by rememberUpdatedState(newValue = messageBarState.error?.message)
@@ -104,47 +128,47 @@ private fun MessageBarComponent(
         }
     }
 
-    AnimatedVisibility(
-        visible = messageBarState.error != null && showMessageBar
-                || messageBarState.success != null && showMessageBar,
-        enter = expandVertically(
-            animationSpec = tween(300),
-            expandFrom = Alignment.Top
-        ),
-        exit = shrinkVertically(
-            animationSpec = tween(300),
-            shrinkTowards = Alignment.Top
-        )
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = if (position == MessageBarPosition.TOP)
+            Arrangement.Top else Arrangement.Bottom
     ) {
-        MessageBar(
-            message = message,
-            error = error,
-            successIcon = successIcon,
-            errorIcon = errorIcon,
-            successContainerColor = successContainerColor,
-            successContentColor = successContentColor,
-            errorContainerColor = errorContainerColor,
-            errorContentColor = errorContentColor,
-            verticalPadding = verticalPadding,
-            horizontalPadding = horizontalPadding,
-            showToastOnCopy = showToastOnCopy
-        )
+        AnimatedVisibility(
+            visible = messageBarState.error != null && showMessageBar
+                    || messageBarState.success != null && showMessageBar,
+            enter = enterAnimation,
+            exit = exitAnimation
+        ) {
+            MessageBar(
+                message = message,
+                error = error,
+                successIcon = successIcon,
+                errorIcon = errorIcon,
+                successContainerColor = successContainerColor,
+                successContentColor = successContentColor,
+                errorContainerColor = errorContainerColor,
+                errorContentColor = errorContentColor,
+                verticalPadding = verticalPadding,
+                horizontalPadding = horizontalPadding,
+                showToastOnCopy = showToastOnCopy
+            )
+        }
     }
 }
 
 @Composable
-private fun MessageBar(
-    message: String? = null,
-    error: String? = null,
-    successIcon: ImageVector = Icons.Default.Check,
-    errorIcon: ImageVector = Icons.Default.Warning,
-    successContainerColor: Color = MaterialTheme.colorScheme.primaryContainer,
-    successContentColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
-    errorContainerColor: Color = MaterialTheme.colorScheme.errorContainer,
-    errorContentColor: Color = MaterialTheme.colorScheme.onErrorContainer,
+internal fun MessageBar(
+    message: String?,
+    error: String?,
+    successIcon: ImageVector,
+    errorIcon: ImageVector,
+    successContainerColor: Color,
+    successContentColor: Color,
+    errorContainerColor: Color,
+    errorContentColor: Color,
     verticalPadding: Dp,
     horizontalPadding: Dp,
-    showToastOnCopy: Boolean = false,
+    showToastOnCopy: Boolean,
 ) {
     val clipboardManager = LocalClipboardManager.current
     val context = LocalContext.current
@@ -157,11 +181,9 @@ private fun MessageBar(
                 else successContainerColor
             )
             .padding(vertical = if (error != null) 0.dp else verticalPadding)
-            .padding(
-                start = horizontalPadding,
-                end = if (error != null) 0.dp else horizontalPadding
-            )
-            .animateContentSize(),
+            .padding(horizontal = horizontalPadding)
+            .animateContentSize()
+            .testTag(MESSAGE_BAR),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -179,8 +201,8 @@ private fun MessageBar(
             )
             Spacer(modifier = Modifier.width(12.dp))
             Text(
-                text =
-                error ?: (message ?: "Unknown"),
+                modifier = Modifier.testTag(tag = MESSAGE_BAR_TEXT),
+                text = message ?: (error ?: "Unknown"),
                 color = if (error != null) errorContentColor
                 else successContentColor,
                 fontSize = MaterialTheme.typography.labelLarge.fontSize,
@@ -189,22 +211,27 @@ private fun MessageBar(
             )
         }
         if (error != null) {
-            TextButton(
+            Row(
                 modifier = Modifier.weight(1f),
-                onClick = {
-                    clipboardManager.setText(AnnotatedString(text = "$error"))
-                    if (showToastOnCopy) {
-                        Toast.makeText(context, "Copied!", Toast.LENGTH_SHORT).show()
-                    }
-                },
-                contentPadding = PaddingValues(vertical = 0.dp)
+                horizontalArrangement = Arrangement.End
             ) {
-                Text(
-                    text = "Copy",
-                    color = errorContentColor,
-                    fontSize = MaterialTheme.typography.labelMedium.fontSize,
-                    textAlign = TextAlign.End
-                )
+                TextButton(
+                    modifier = Modifier.testTag(tag = COPY_BUTTON),
+                    onClick = {
+                        clipboardManager.setText(AnnotatedString(text = "$error"))
+                        if (showToastOnCopy) {
+                            Toast.makeText(context, "Copied!", Toast.LENGTH_SHORT).show()
+                        }
+                    },
+                    contentPadding = PaddingValues(vertical = 0.dp)
+                ) {
+                    Text(
+                        text = "Copy",
+                        color = errorContentColor,
+                        fontSize = MaterialTheme.typography.labelMedium.fontSize,
+                        textAlign = TextAlign.End
+                    )
+                }
             }
         }
     }
@@ -212,9 +239,17 @@ private fun MessageBar(
 
 @Composable
 @Preview
-fun MessageBarPreview() {
+internal fun MessageBarPreview() {
     MessageBar(
         message = "Successfully Updated.",
+        error = null,
+        showToastOnCopy = false,
+        successIcon = Icons.Default.Check,
+        errorIcon = Icons.Default.Warning,
+        successContainerColor = MaterialTheme.colorScheme.primaryContainer,
+        successContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        errorContainerColor = MaterialTheme.colorScheme.errorContainer,
+        errorContentColor = MaterialTheme.colorScheme.onErrorContainer,
         verticalPadding = 12.dp,
         horizontalPadding = 12.dp
     )
@@ -222,9 +257,17 @@ fun MessageBarPreview() {
 
 @Composable
 @Preview
-fun MessageBarErrorPreview() {
+internal fun MessageBarErrorPreview() {
     MessageBar(
-        error = "Internet Unavailable",
+        message = null,
+        error = "Internet Unavailable.",
+        showToastOnCopy = false,
+        successIcon = Icons.Default.Check,
+        errorIcon = Icons.Default.Warning,
+        successContainerColor = MaterialTheme.colorScheme.primaryContainer,
+        successContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        errorContainerColor = MaterialTheme.colorScheme.errorContainer,
+        errorContentColor = MaterialTheme.colorScheme.onErrorContainer,
         verticalPadding = 12.dp,
         horizontalPadding = 12.dp
     )

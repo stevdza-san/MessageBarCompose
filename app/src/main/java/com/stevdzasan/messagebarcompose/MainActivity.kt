@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             MessageBarComposeTheme {
                 val state = rememberMessageBarState()
-                ContentWithMessageBar(messageBarState = state) {
+                ContentWithMessageBar(messageBarState = state,) {
                     Column(
                         modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.Center,
