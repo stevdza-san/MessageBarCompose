@@ -1,7 +1,7 @@
 <h1 align="center">Message Bar Compose</h1></br>
 
 <p align="center">
-  <a href="https://jitpack.io/#stevdza-san/MessageBarCompose/1.0.4"><img alt="License" src="https://badgen.net/badge/Jitpack/1.0.4/orange?icon=github"/></a>
+  <a href="https://jitpack.io/#stevdza-san/MessageBarCompose/1.0.5"><img alt="License" src="https://badgen.net/badge/Jitpack/1.0.5/orange?icon=github"/></a>
   <a href="https://github.com/stevdza-san"><img alt="Profile" src="https://badgen.net/badge/Github/stevdza_san/green?icon=github"/></a>
 </p><br>
 
@@ -14,17 +14,18 @@ and it is built to supports Material 3 design system.
 <p align="center">
 <img src="https://github.com/stevdza-san/MessageBarCompose/blob/master/previews/MessageBar.gif?raw=true" width="268"/>
 <img src="https://github.com/stevdza-san/MessageBarCompose/blob/master/previews/MessageBar2.gif?raw=true" width="268"/>
+<img src="https://github.com/stevdza-san/MessageBarCompose/blob/master/previews/MessageBar3.gif?raw=true" width="268"/>
 </p>
 
 ## Download
-<a href="https://jitpack.io/#stevdza-san/MessageBarCompose/1.0.4"><img alt="License" src="https://badgen.net/badge/Jitpack/1.0.4/orange?icon=github"/></a>
+<a href="https://jitpack.io/#stevdza-san/MessageBarCompose/1.0.5"><img alt="License" src="https://badgen.net/badge/Jitpack/1.0.5/orange?icon=github"/></a>
 
 ### Gradle
 
 Add the dependency below to your module's `build.gradle` file:
 ```gradle
 dependencies {
-    implementation 'com.github.stevdza-san:MessageBarCompose:1.0.4'
+    implementation 'com.github.stevdza-san:MessageBarCompose:1.0.5'
 }
 ```
 Add a repository in your `settings.gradle` file:
