@@ -51,6 +51,8 @@ fun ContentWithMessageBar(
     showToastOnCopy: Boolean = false,
     successIcon: ImageVector = Icons.Default.Check,
     errorIcon: ImageVector = Icons.Default.Warning,
+    errorMaxLines: Int = 1,
+    successMaxLines: Int = 1,
     contentBackgroundColor: Color = MaterialTheme.colorScheme.surface,
     successContainerColor: Color = MaterialTheme.colorScheme.primaryContainer,
     successContentColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -82,6 +84,8 @@ fun ContentWithMessageBar(
             visibilityDuration = visibilityDuration,
             successIcon = successIcon,
             errorIcon = errorIcon,
+            errorMaxLines = errorMaxLines,
+            successMaxLines = successMaxLines,
             successContainerColor = successContainerColor,
             successContentColor = successContentColor,
             errorContainerColor = errorContainerColor,
@@ -102,6 +106,8 @@ internal fun MessageBarComponent(
     visibilityDuration: Long,
     successIcon: ImageVector,
     errorIcon: ImageVector,
+    errorMaxLines: Int,
+    successMaxLines: Int,
     successContainerColor: Color,
     successContentColor: Color,
     errorContainerColor: Color,
@@ -144,6 +150,8 @@ internal fun MessageBarComponent(
                 error = error,
                 successIcon = successIcon,
                 errorIcon = errorIcon,
+                errorMaxLines = errorMaxLines,
+                successMaxLines = successMaxLines,
                 successContainerColor = successContainerColor,
                 successContentColor = successContentColor,
                 errorContainerColor = errorContainerColor,
@@ -162,6 +170,8 @@ internal fun MessageBar(
     error: String?,
     successIcon: ImageVector,
     errorIcon: ImageVector,
+    errorMaxLines: Int,
+    successMaxLines: Int,
     successContainerColor: Color,
     successContentColor: Color,
     errorContainerColor: Color,
@@ -180,7 +190,7 @@ internal fun MessageBar(
                 if (error != null) errorContainerColor
                 else successContainerColor
             )
-            .padding(vertical = if (error != null) 0.dp else verticalPadding)
+            .padding(vertical = verticalPadding)
             .padding(horizontal = horizontalPadding)
             .animateContentSize()
             .testTag(MESSAGE_BAR),
@@ -207,7 +217,7 @@ internal fun MessageBar(
                 else successContentColor,
                 fontSize = MaterialTheme.typography.labelLarge.fontSize,
                 overflow = TextOverflow.Ellipsis,
-                maxLines = 1
+                maxLines = if(error != null) errorMaxLines else successMaxLines
             )
         }
         if (error != null) {
@@ -243,9 +253,11 @@ internal fun MessageBarPreview() {
     MessageBar(
         message = "Successfully Updated.",
         error = null,
-        showToastOnCopy = false,
         successIcon = Icons.Default.Check,
         errorIcon = Icons.Default.Warning,
+        successMaxLines = 1,
+        errorMaxLines = 1,
+        showToastOnCopy = false,
         successContainerColor = MaterialTheme.colorScheme.primaryContainer,
         successContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
         errorContainerColor = MaterialTheme.colorScheme.errorContainer,
@@ -261,9 +273,11 @@ internal fun MessageBarErrorPreview() {
     MessageBar(
         message = null,
         error = "Internet Unavailable.",
-        showToastOnCopy = false,
-        successIcon = Icons.Default.Check,
         errorIcon = Icons.Default.Warning,
+        successIcon = Icons.Default.Check,
+        errorMaxLines = 1,
+        successMaxLines = 1,
+        showToastOnCopy = false,
         successContainerColor = MaterialTheme.colorScheme.primaryContainer,
         successContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
         errorContainerColor = MaterialTheme.colorScheme.errorContainer,

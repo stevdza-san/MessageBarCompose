@@ -23,7 +23,8 @@ class MainActivity : ComponentActivity() {
                 val state = rememberMessageBarState()
                 ContentWithMessageBar(
                     messageBarState = state,
-                    position = MessageBarPosition.BOTTOM
+                    position = MessageBarPosition.TOP,
+                    errorMaxLines = 3
                 ) {
                     Column(
                         modifier = Modifier.fillMaxSize(),
@@ -31,14 +32,14 @@ class MainActivity : ComponentActivity() {
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Button(onClick = {
-                            state.addError(exception = Exception("Internet Unavailable."))
+                            state.addError(exception = Exception("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."))
                         }) {
-                            Text(text = "Error Bottom")
+                            Text(text = "Error LONG")
                         }
                         Button(onClick = {
-                            state.addSuccess(message = "Successfully Updated.")
+                            state.addSuccess(message = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.")
                         }) {
-                            Text(text = "Success Bottom")
+                            Text(text = "Success LONG")
                         }
                     }
                 }
