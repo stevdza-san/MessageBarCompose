@@ -70,4 +70,16 @@ internal class MessageBarTest {
         assert(clipboardManager.getText()?.text == "Fatal Error!")
     }
 
+    @Test
+    fun addErrorState_Assert_CopyButtonNotVisible() {
+        composeTestRule.setContent {
+            clipboardManager = LocalClipboardManager.current
+            state = rememberMessageBarState()
+            ContentWithMessageBar(messageBarState = state, showCopyButton = false) {}
+        }
+        state.addError(exception = Exception("Fatal Error!"))
+        composeTestRule.onNodeWithTag(COPY_BUTTON)
+            .assertDoesNotExist()
+    }
+
 }
