@@ -24,6 +24,7 @@ class MainActivity : ComponentActivity() {
                 ContentWithMessageBar(
                     messageBarState = state,
                     position = MessageBarPosition.TOP,
+                    successMaxLines = 3,
                     errorMaxLines = 3
                 ) {
                     Column(
