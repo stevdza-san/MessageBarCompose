@@ -50,6 +50,7 @@ fun ContentWithMessageBar(
     visibilityDuration: Long = 3000L,
     showToastOnCopy: Boolean = false,
     successIcon: ImageVector = Icons.Default.Check,
+    showCopyButton: Boolean = true,
     errorIcon: ImageVector = Icons.Default.Warning,
     errorMaxLines: Int = 1,
     successMaxLines: Int = 1,
@@ -84,6 +85,7 @@ fun ContentWithMessageBar(
             visibilityDuration = visibilityDuration,
             successIcon = successIcon,
             errorIcon = errorIcon,
+            showCopyButton = showCopyButton,
             errorMaxLines = errorMaxLines,
             successMaxLines = successMaxLines,
             successContainerColor = successContainerColor,
@@ -116,6 +118,7 @@ internal fun MessageBarComponent(
     exitAnimation: ExitTransition,
     verticalPadding: Dp,
     horizontalPadding: Dp,
+    showCopyButton: Boolean,
     showToastOnCopy: Boolean
 ) {
     var showMessageBar by remember { mutableStateOf(false) }
@@ -158,6 +161,7 @@ internal fun MessageBarComponent(
                 errorContentColor = errorContentColor,
                 verticalPadding = verticalPadding,
                 horizontalPadding = horizontalPadding,
+                showCopyButton = showCopyButton,
                 showToastOnCopy = showToastOnCopy
             )
         }
@@ -178,6 +182,7 @@ internal fun MessageBar(
     errorContentColor: Color,
     verticalPadding: Dp,
     horizontalPadding: Dp,
+    showCopyButton: Boolean,
     showToastOnCopy: Boolean,
 ) {
     val clipboardManager = LocalClipboardManager.current
@@ -220,7 +225,7 @@ internal fun MessageBar(
                 maxLines = if(error != null) errorMaxLines else successMaxLines
             )
         }
-        if (error != null) {
+        if (error != null && showCopyButton) {
             Row(
                 modifier = Modifier.weight(1f),
                 horizontalArrangement = Arrangement.End
@@ -263,6 +268,7 @@ internal fun MessageBarPreview() {
         errorContainerColor = MaterialTheme.colorScheme.errorContainer,
         errorContentColor = MaterialTheme.colorScheme.onErrorContainer,
         verticalPadding = 12.dp,
+        showCopyButton = true,
         horizontalPadding = 12.dp
     )
 }
@@ -282,6 +288,7 @@ internal fun MessageBarErrorPreview() {
         successContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
         errorContainerColor = MaterialTheme.colorScheme.errorContainer,
         errorContentColor = MaterialTheme.colorScheme.onErrorContainer,
+        showCopyButton = true,
         verticalPadding = 12.dp,
         horizontalPadding = 12.dp
     )
