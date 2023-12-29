@@ -33,7 +33,7 @@ Add a repository in your `settings.gradle` file:
 dependencyResolutionManagement {
     repositories {
         ...
-        maven { url 'https://jitpack.io' }
+        maven(url = "https://jitpack.io")
     }
 }
 ```
