@@ -25,7 +25,7 @@ and it is built to supports Material 3 design system.
 Add the dependency below to your module's `build.gradle` file:
 ```gradle
 dependencies {
-    implementation 'com.github.stevdza-san:MessageBarCompose:1.0.8'
+    implementation("com.github.stevdza-san:MessageBarCompose:1.0.8")
 }
 ```
 Add a repository in your `settings.gradle` file:
